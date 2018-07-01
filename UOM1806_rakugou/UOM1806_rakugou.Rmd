@@ -130,7 +130,7 @@ dng -> darktable
 * X RAW Studio
     * [https://fujifilm-x.com/jp/x-stories/fujifilm-x-raw-studio-features-users-guide/](https://fujifilm-x.com/jp/x-stories/fujifilm-x-raw-studio-features-users-guide/)
     * カメラ内現像をパソコンから行う
-    * Windows版はまだ出ていません
+    * Windows版も出ていましたが、起動できませんでした。
 
 ## カメラを買い替える
 * UFRawやdarktableに対応しているカメラを購入する
