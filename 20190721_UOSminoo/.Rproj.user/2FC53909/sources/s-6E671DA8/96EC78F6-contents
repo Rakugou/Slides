@@ -1,0 +1,156 @@
+---
+title: "SNSに写真をアップしてチヤホヤされたい話"
+author: Rakugou
+output: revealjs::revealjs_presentation
+output:revealjs::revealjs_presentation:
+pandoc_args: [
+    '--from', 'markdown+autolink_bare_uris+tex_math_single_backslash-implicit_figures'
+              ]
+dev: "png"
+css: style-rpress.css
+---
+
+## 自己紹介{#whoamI}
+- 名前：Rakugou
+- 所有カメラ：X-T2、X-H1
+- ざっぱ〜ん(Vol.3〜)
+
+![Sagrada Famillia](./images/sf.jpg)
+
+# 写真を上げてチヤホヤされたい{#shouninyokkyuu01}
+
+## 今アカウントがあるSNS{#media01}
+- [twitter](https://twitter.com/rakugou)
+- [flickr](https://www.flickr.com/photos/73945842@N04/)
+- instagram(実質運用していません)
+- [はてなブログ](http://rakugou.hatenablog.jp/)
+
+## 今管理しているメディア{#media01}
+- Twitter：デジタルカメラとは親和性△
+- flickr：無料版の撮影上限を使い切ってしまったのでこれ以上のアップはできない
+- instagram：画像を一点一点上げるのは手間、ハッシュタグが好きになれない
+- はてなブログ：無難な着地点
+
+## はてなブログ{#hatena01}
+- Rakugouのほぼ日日報（平均10pv/日いかないくらい）
+  - 写真とか稟議とか上げてるブログ
+  - はてなフォトライフを経由して写真をアップロード
+- （とりあえずは）ここを拠点とする
+
+## はてなフォトライフ{#hatena02}
+- [http://f.hatena.ne.jp/](http://f.hatena.ne.jp/)
+- はてなブログ掲載の場合は2MB/枚
+- 2GB/月までアップロード可能
+   - 上限まで使い切ったことは一切ない
+      
+# 写真の前処理{#before02}
+
+## 前処理フロー（撮って出し）{#before}
+- JPEG画像セレクト→撮って出しでブログに上げる時の話
+- 撮影→PCにダウンロード→画像セレクト→縮小→Exif情報削除→画質調整→はてなフォトライフにアップロード
+
+![cite](./images/cite.jpg)
+
+## 前処理フロー
+- デメリット
+- 一つ一つをアップしていく方式(instagram)なら前述のフローでOK
+- ブログとなると、画像セレクト〜アップロードに面倒くささを感じる
+- 縮小→Exif情報削除→画質調整を一気にしたい
+
+# ImageMagickに頼ろう{#IM01}
+
+## ImageMagick{#IM02}
+- コマンドで画像を編集することが出来る
+- コマンドで出来る機能は多岐に渡る
+- [https://imagemagick.org/](https://imagemagick.org/)
+
+## mogrify{#mogrify}
+- mogrifyコマンドはフォルダ内にある複数の画像を操作することが出来る
+- 複数の画像に対して常に一定の加工をさせる場合、まとめてできるので便利
+- 単一の画像に対して操作する場合はconvertコマンドを使用する
+- [https://imagemagick.org/script/mogrify.php](https://imagemagick.org/script/mogrify.php)
+
+## strip
+- Exif情報をまるっと削除する
+- まるっと削除すると縦向きの画像の時に困る
+- 後述するauto-orientedで修正
+
+## strip(before-after){#stripba1}
+
+![カサ・ペドレラ玄関](./images/strip-beforeafter.png)
+
+## strip(before-after){#stripba2}
+
+![Exif情報比較](./images/strip-compare.png)
+
+## resize
+- 画像サイズを変更
+- 所有カメラの1番大きいサイズは6000*4000
+- ブログパーツとしてのサイズを考えると、1500*1000くらい？
+
+## resize{#resize-demo01}
+
+![サグラダ・ファミリア](./images/resize-demo.jpg)
+
+## resize{#resize-demo02}
+
+![画像](./images/resize-demo2.jpg)
+
+## auto-oriented{#ao01}
+- 画像の向きを指定
+- Exif情報に書かれている向きに依存しない
+- Exif情報を削除しても元の向きにしてくれるオプション
+
+## auto-oriented{#ao02}
+![Exif情報](./images/orient-info.png)
+
+## auto-oriented{#ao03}
+- 1番下のOrientationの項目
+- 「left, bottom」と記載
+- 横長の写真だと「Top, left」と記載されている
+
+## auto-oriented{#ao04}
+
+![Exif情報2](./images/orient-info2.png)
+
+## quality{#quality01}
+- 画質を調整(低いほどサイズは軽くなる)
+- ブログ向けで画像サイズ重視のため、90%に設定
+- 90%にしたところで、見た目はそこまで変わらない（やや明るくなる？）
+- 80%で奥の風景とかエッフェル塔の鉄組みがぼやけてくる
+
+## quality(Before-After)(90%との比較){#quality90}
+
+![品質90%での比較](./images/quality-beforeafter90.png)
+
+## quality(Before-After)(80%との比較){#quality80}
+
+![品質80%での比較](./images/quality-beforeafter80.png)
+
+## contrast{#contrast01}
+- たまに使う
+- コントラストを調節してくれるオプション
+- contrast - でコントラストを上げる。contrast + でコントラストを下げる。
+- マイナスとプラスで直感的に違うので注意。
+
+## contrast(Before-After){#contrast02}
+![コントラスト通常→プラス補正](./images/contrast-high.png)
+
+![コントラスト通常→マイナス補正](./images/contrast-low.png)
+
+## ファイルの指定{#file}
+
+- 最後にファイルの指定
+- 写真の拡張子に合わせて末尾を選択
+    - 一つのフォルダにまとめて一気にやる場合、*.拡張子
+    - FUJIFILMのカメラをお使いであれば、*.JPG(大文字)
+
+# まとめ{#matome}
+
+## 今使ってるコード{#code}
+$ mogrify -strip -format jpg -quality 90 -auto-orient -resize 25% *.JPG
+
+## おわり{#fin}
+
+![グエル公園](./images/fin.jpg)
+
